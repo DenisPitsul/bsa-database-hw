@@ -3,7 +3,9 @@ CREATE TABLE app_file (
     file_name VARCHAR(255) NOT NULL,
     mime_type VARCHAR(255) NOT NULL,
     key VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL
+    url VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE app_user (
@@ -14,6 +16,8 @@ CREATE TABLE app_user (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     avatar_file_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (avatar_file_id) REFERENCES app_file(id)
 );
 
@@ -25,17 +29,23 @@ CREATE TABLE director (
     date_of_birth DATE,
     gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
     main_photo_file_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
 );
 
 CREATE TABLE country (
     id INT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE genre (
     id INT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE movie (
@@ -49,6 +59,8 @@ CREATE TABLE movie (
     country_id INT NOT NULL,
 	genre_id INT NOT NULL,
     poster_file_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (director_id) REFERENCES director(id),
     FOREIGN KEY (country_id) REFERENCES country(id),
     FOREIGN KEY (poster_file_id) REFERENCES app_file(id),
@@ -63,6 +75,8 @@ CREATE TABLE actor (
     date_of_birth DATE,
     gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
     main_photo_file_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
 );
 
@@ -73,6 +87,8 @@ CREATE TABLE character (
 	role VARCHAR(16) NOT NULL CHECK (role IN ('leading', 'supporting', 'background')),
     movie_id INT NOT NULL,
     actor_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (movie_id) REFERENCES Movie(id),
     FOREIGN KEY (actor_id) REFERENCES Actor(id)
 );
@@ -85,6 +101,8 @@ CREATE TABLE person (
     date_of_birth DATE,
     gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
     main_photo_file_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
 );
 
@@ -92,6 +110,8 @@ CREATE TABLE favorite_movies (
     id INT PRIMARY KEY,
     user_id INT NOT NULL,
     movie_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES app_user(id),
     FOREIGN KEY (movie_id) REFERENCES movie(id)
 );
