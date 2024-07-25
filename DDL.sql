@@ -21,19 +21,6 @@ CREATE TABLE app_user (
     FOREIGN KEY (avatar_file_id) REFERENCES app_file(id)
 );
 
-CREATE TABLE director (
-    id INT PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    biography TEXT,
-    date_of_birth DATE,
-    gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
-    main_photo_file_id INT NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
-);
-
 CREATE TABLE country (
     id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -61,23 +48,10 @@ CREATE TABLE movie (
     poster_file_id INT,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (director_id) REFERENCES director(id),
+    FOREIGN KEY (director_id) REFERENCES person(id),
     FOREIGN KEY (country_id) REFERENCES country(id),
     FOREIGN KEY (poster_file_id) REFERENCES app_file(id),
 	FOREIGN KEY (genre_id) REFERENCES genre(id)
-);
-
-CREATE TABLE actor (
-    id INT PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    biography TEXT,
-    date_of_birth DATE,
-    gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
-    main_photo_file_id INT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
 );
 
 CREATE TABLE character (
@@ -90,7 +64,7 @@ CREATE TABLE character (
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (movie_id) REFERENCES Movie(id),
-    FOREIGN KEY (actor_id) REFERENCES Actor(id)
+    FOREIGN KEY (actor_id) REFERENCES person(id)
 );
 
 CREATE TABLE person (
@@ -100,9 +74,10 @@ CREATE TABLE person (
     biography TEXT,
     date_of_birth DATE,
     gender VARCHAR(10) NOT NULL CHECK (gender IN ('male', 'female')),
-    main_photo_file_id INT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    origin_country_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (origin_country_id) REFERENCES country(id),
     FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
 );
 
@@ -114,4 +89,15 @@ CREATE TABLE favorite_movies (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES app_user(id),
     FOREIGN KEY (movie_id) REFERENCES movie(id)
+);
+
+CREATE TABLE person_photo (
+    id INT PRIMARY KEY,
+    person_id INT NOT NULL,
+    file_id INT NOT NULL,
+    is_primary BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (person_id) REFERENCES person(id),
+    FOREIGN KEY (file_id) REFERENCES app_file(id)
 );
