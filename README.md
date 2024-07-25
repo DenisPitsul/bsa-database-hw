@@ -37,6 +37,12 @@ timestamp updated_at
 int director_id FK
 int country_id FK
 int poster_file_id FK
+}
+movie_genre {
+int id PK
+timestamp created_at
+timestamp updated_at
+int movie_id FK
 int genre_id FK
 }
 character {
@@ -76,7 +82,7 @@ int movie_id FK
 
     photo_person {
         int id PK
-        boolean is_primary
+        boleann is_primary
         timestamp created_at
         timestamp updated_at
         int person_id FK
@@ -90,7 +96,8 @@ int movie_id FK
     person ||--o{ photo_person : has
     app_file ||--o{ photo_person : is
     movie ||--o{ character : includes
-    genre ||--o{ movie : is
+    genre ||--o{ movie_genre : is
+    movie ||--o{ movie_genre : is
     person ||--o{ character : plays
     person ||--o{ movie : plays
     movie ||--o{ favorite_movies : favorite

@@ -1,5 +1,5 @@
 CREATE TABLE app_file (
-    id INT PRIMARY KEY,
+    id PRIMARY KEY NOT NULL AUTO_INCREMENT,
     file_name VARCHAR(255) NOT NULL,
     mime_type VARCHAR(255) NOT NULL,
     key VARCHAR(255) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE app_file (
 );
 
 CREATE TABLE app_user (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -22,53 +22,14 @@ CREATE TABLE app_user (
 );
 
 CREATE TABLE country (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE genre (
-    id INT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE movie (
-    id INT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    budget DECIMAL(15, 2) NOT NULL,
-    release_date DATE NOT NULL,
-    duration_minutes INT NOT NULL,
-    director_id INT NOT NULL,
-    country_id INT NOT NULL,
-	genre_id INT NOT NULL,
-    poster_file_id INT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (director_id) REFERENCES person(id),
-    FOREIGN KEY (country_id) REFERENCES country(id),
-    FOREIGN KEY (poster_file_id) REFERENCES app_file(id),
-	FOREIGN KEY (genre_id) REFERENCES genre(id)
-);
-
-CREATE TABLE character (
-    id INT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-	role VARCHAR(16) NOT NULL CHECK (role IN ('leading', 'supporting', 'background')),
-    movie_id INT NOT NULL,
-    actor_id INT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (movie_id) REFERENCES Movie(id),
-    FOREIGN KEY (actor_id) REFERENCES person(id)
 );
 
 CREATE TABLE person (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     biography TEXT,
@@ -77,12 +38,58 @@ CREATE TABLE person (
     origin_country_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (origin_country_id) REFERENCES country(id),
-    FOREIGN KEY (main_photo_file_id) REFERENCES app_file(id)
+    FOREIGN KEY (origin_country_id) REFERENCES country(id)
+);
+
+CREATE TABLE genre (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE movie (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    budget DECIMAL(15, 2) NOT NULL,
+    release_date DATE NOT NULL,
+    duration_minutes INT NOT NULL,
+    director_id INT NOT NULL,
+    country_id INT NOT NULL,
+    poster_file_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (director_id) REFERENCES person(id),
+    FOREIGN KEY (country_id) REFERENCES country(id),
+    FOREIGN KEY (poster_file_id) REFERENCES app_file(id)
+);
+
+CREATE TABLE movie_genre (
+    id SERIAL PRIMARY KEY,
+    movie_id INT NOT NULL,
+    genre_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (movie_id) REFERENCES movie(id),
+    FOREIGN KEY (genre_id) REFERENCES genre(id)
+);
+
+CREATE TABLE character (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+	role VARCHAR(16) NOT NULL CHECK (role IN ('leading', 'supporting', 'background')),
+    movie_id INT NOT NULL,
+    actor_id INT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (movie_id) REFERENCES movie(id),
+    FOREIGN KEY (actor_id) REFERENCES person(id)
 );
 
 CREATE TABLE favorite_movies (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     movie_id INT NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -92,7 +99,7 @@ CREATE TABLE favorite_movies (
 );
 
 CREATE TABLE person_photo (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     person_id INT NOT NULL,
     file_id INT NOT NULL,
     is_primary BOOLEAN DEFAULT FALSE,
