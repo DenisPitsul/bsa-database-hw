@@ -82,7 +82,7 @@ int movie_id FK
 
     photo_person {
         int id PK
-        boleann is_primary
+        boolean is_primary
         timestamp created_at
         timestamp updated_at
         int person_id FK
